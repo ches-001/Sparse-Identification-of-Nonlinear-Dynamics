@@ -48,7 +48,7 @@ $$\bar{y} =
      .\\
      y_t
    \end{bmatrix}$$
-   
+
 $$\bar{z} =
    \begin{bmatrix}
      z_0 \\
@@ -91,6 +91,7 @@ $$\dot{x} =
      .\\
      {x_t}^{\prime}
    \end{bmatrix}$$
+
 $$\dot{y} =
    \begin{bmatrix}
      {y_0}^{\prime} \\
@@ -101,6 +102,7 @@ $$\dot{y} =
      .\\
      {y_t}^{\prime}
    \end{bmatrix}$$
+
 $$\dot{z} =
    \begin{bmatrix}
      {z_0}^{\prime} \\
@@ -128,6 +130,7 @@ $$X =
      . &. &.\\
      x_t, &y_t, &z_t
    \end{bmatrix}$$
+
 $$Y =
    \begin{bmatrix}
      {x_0}^{\prime}, &{y_0}^{\prime}, &{z_0}^{\prime} \\
@@ -232,7 +235,9 @@ $$X =
      x_{20}, &x_{21}, &x_{24}\\
      x_{30}, &x_{31}, &x_{34}\\
    \end{bmatrix}$$
+
 and
+
 $$\beta =
    \begin{bmatrix}
      \beta_{00}, &0, &\beta_{02}\\
