@@ -37,6 +37,7 @@ $$\bar{x} =
      .\\
      x_t
    \end{bmatrix}$$
+
 $$\bar{y} =
    \begin{bmatrix}
      y_0 \\
@@ -47,6 +48,7 @@ $$\bar{y} =
      .\\
      y_t
    \end{bmatrix}$$
+   
 $$\bar{z} =
    \begin{bmatrix}
      z_0 \\
