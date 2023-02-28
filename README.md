@@ -27,7 +27,7 @@ $\beta$ is environmental factors / parameters outside our control
 2. ### **Identifying and Arranging State Components**
 In this step, the dataset collected is used to form column state vectors that will then be combined to matrices. For example, if we had a system whose states change in time, where each state represents a vector in 3 dimensions x, y and z, then we can isolate each dimension of the given states into 3 different column vectors $\bar{x}$, $\bar{y}$, $\bar{z}$, where:
 
-$\bar{x} =
+$$\bar{x} =
    \begin{bmatrix}
      x_0 \\
      x_1 \\
@@ -36,8 +36,8 @@ $\bar{x} =
      .\\
      .\\
      x_t
-   \end{bmatrix}$
-$\bar{y} =
+   \end{bmatrix}$$
+$$\bar{y} =
    \begin{bmatrix}
      y_0 \\
      y_1 \\
@@ -46,8 +46,8 @@ $\bar{y} =
      .\\
      .\\
      y_t
-   \end{bmatrix}$
-$\bar{z} =
+   \end{bmatrix}$$
+$$\bar{z} =
    \begin{bmatrix}
      z_0 \\
      z_1 \\
@@ -56,7 +56,7 @@ $\bar{z} =
      .\\
      .\\
      z_t
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
 <br><br>
 
@@ -79,7 +79,7 @@ And in *Center differencing*, $\Delta x = \frac {x_{t+h} - x_{t-h}} {\Delta t}$,
 
 After the derivatives are computed across each dimension (x, y, z), we form derivative vector columns, $\dot{x}$, $\dot{y}$, $\dot{z}$, where:
 
-$\dot{x} =
+$$\dot{x} =
    \begin{bmatrix}
      {x_0}^{\prime} \\
      {x_1}^{\prime} \\
@@ -88,8 +88,8 @@ $\dot{x} =
      .\\
      .\\
      {x_t}^{\prime}
-   \end{bmatrix}$
-$\dot{y} =
+   \end{bmatrix}$$
+$$\dot{y} =
    \begin{bmatrix}
      {y_0}^{\prime} \\
      {y_1}^{\prime} \\
@@ -98,8 +98,8 @@ $\dot{y} =
      .\\
      .\\
      {y_t}^{\prime}
-   \end{bmatrix}$
-$\dot{z} =
+   \end{bmatrix}$$
+$$\dot{z} =
    \begin{bmatrix}
      {z_0}^{\prime} \\
      {z_1}^{\prime} \\
@@ -108,7 +108,7 @@ $\dot{z} =
      .\\
      .\\
      {z_t}^{\prime}
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
 <br><br>
 
@@ -116,7 +116,7 @@ $\dot{z} =
 The column vectors for states ($\bar{x}$, $\bar{y}$, $\bar{z}$) and derivatives ($\dot{x}$, $\dot{y}$, $\dot{z}$) are combined to form matrices $X$ and $Y$, where:
 
 
-$X =
+$$X =
    \begin{bmatrix}
      x_0, &y_0, &z_0 \\
      x_1 &y_1, &z_1 \\
@@ -125,8 +125,8 @@ $X =
      . &. &.\\
      . &. &.\\
      x_t, &y_t, &z_t
-   \end{bmatrix}$
-$Y =
+   \end{bmatrix}$$
+$$Y =
    \begin{bmatrix}
      {x_0}^{\prime}, &{y_0}^{\prime}, &{z_0}^{\prime} \\
      {x_1}^{\prime} &{y_1}^{\prime}, &{z_1}^{\prime} \\
@@ -135,7 +135,7 @@ $Y =
      . &. &.\\
      . &. &.\\
      {x_t}^{\prime}, &{y_t}^{\prime}, &{z_t}^{\prime}
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
 <br><br>
 
@@ -150,7 +150,7 @@ In this implementation, we compute the polynomial features of the $X$ matrix fro
 
 after computing the polynomial features, the matrix $X$ is overwritten to becomes: 
 
-$X =
+$$X =
    \begin{bmatrix}
      1, &x_0, &y_0, &z_0, &{x_0}^2, &. &. &. &. &,{z_0}^5 \\
      1, &x_1, &y_1, &z_1, &{x_1}^2, &. &. &. &. &,{z_1}^5\\
@@ -159,7 +159,7 @@ $X =
      . &. &. &. &. &. &. &. &.\\
      . &. &. &. &. &. &. &. &.\\
      1, &x_t, &y_t, &z_t, &{x_t}^2, &. &. &. &. &,{z_t}^5
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
 
 <br><br>
@@ -194,53 +194,53 @@ After computing the sparse linear operator $\beta$, we get the index of the zero
 to Illustrate with a toy example:
 
 let:
-$X =
+$$X =
    \begin{bmatrix}
      x_{00}, &x_{01}, &x_{02}, &x_{03}, &x_{04}\\
      x_{10}, &x_{11}, &x_{12}, &x_{13}, &x_{14}\\
      x_{20}, &x_{21}, &x_{22}, &x_{23}, &x_{24}\\
      x_{30}, &x_{31}, &x_{32}, &x_{33}, &x_{34}\\
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
-$Y =
+$$Y =
    \begin{bmatrix}
      y_{00}, &y_{01}, &y_{02}\\
      y_{10}, &y_{11}, &y_{12}\\
      y_{20}, &y_{21}, &y_{22}\\
      y_{30}, &y_{31}, &y_{32}\\
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
 if we computed the sparse linear operator $\beta$ to be:
 
-$\beta =
+$$\beta =
    \begin{bmatrix}
      \beta_{00}, &0, &\beta_{02}\\
      \beta_{10}, &\beta_{11}, &0\\
      0, &0, &0\\
      0, &0, &0\\
      0, &\beta_{41}, &0\\
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
 Then, the indexes corresponding to zero rows are index 2 and index 3 (indexing begins at 0), hence we can remove columns 2 and 3 from matrix $X$, as well as rows 2 and 3 from matrix $\beta$ to form SINDy matrices, such that:
 
-$X =
+$$X =
    \begin{bmatrix}
      x_{00}, &x_{01}, &x_{04}\\
      x_{10}, &x_{11}, &x_{14}\\
      x_{20}, &x_{21}, &x_{24}\\
      x_{30}, &x_{31}, &x_{34}\\
-   \end{bmatrix}$ 
+   \end{bmatrix}$$
 and
-$\beta =
+$$\beta =
    \begin{bmatrix}
      \beta_{00}, &0, &\beta_{02}\\
      \beta_{10}, &\beta_{11}, &0\\
      0, &\beta_{41}, &0\\
-   \end{bmatrix}$
+   \end{bmatrix}$$
 
 Therefore:
 
-$
+$$
    \begin{bmatrix}
      y_{00}, &y_{01}, &y_{02}\\
      y_{10}, &y_{11}, &y_{12}\\
@@ -258,7 +258,7 @@ $
      \beta_{10}, &\beta_{11}, &0\\
      0, &\beta_{41}, &0\\
    \end{bmatrix}
-$
+$$
 
 From the linear matrix combination above, we know that:
 
