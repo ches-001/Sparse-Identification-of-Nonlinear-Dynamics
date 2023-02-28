@@ -319,7 +319,7 @@ The following code simulates a lorenz system for 10,000 timesteps from $t=0$ to 
 import numpy as np
 from sindy import simulate_lorenz_attractor
 
-# system parametera
+# system parameters
 sigma = 10.0
 rho = 28.0
 beta = 8/3
