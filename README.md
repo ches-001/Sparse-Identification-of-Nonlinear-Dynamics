@@ -446,7 +446,7 @@ X_prime = X_poly[relevant_cols]
 
 <br><br>
 
-4. ### **Use The Computed Linear Operator to Compute to Estimate Derivatives**
+5. ### **Use The Computed Linear Operator to Compute to Estimate Derivatives**
 
 After computing the linear operator, you can attempt to estimate the derivate like so:
 
