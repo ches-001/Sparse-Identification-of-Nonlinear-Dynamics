@@ -294,7 +294,7 @@ $\dot{z} = \bar{x}\psi$
 <br><br>
 
 ## **Section 2:**  Code Example
-Now we have gone through the steps required for Sparse Identification of Nonlinear Dynamics, let us simply take a code example with helper functions from the `sindy.py` file from this repository. In this example, we will attempt to identify the nonlinear dynamics of a lorenz attractor with sparse linear regression.
+Now we have gone through the steps required for Sparse Identification of Nonlinear Dynamics, let us simply take a code example with helper functions from the [sindy.py](https://github.com/ches-001/Sparse-Identification-of-Nonlinear-Dynamics/blob/main/sindy.py) file from this repository. In this example, we will attempt to identify the nonlinear dynamics of a lorenz attractor with sparse linear regression.
 
 1. ### **Simulating a Lorenz Attractor**
 
