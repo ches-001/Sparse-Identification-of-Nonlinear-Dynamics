@@ -458,4 +458,4 @@ With this, you can verify that it is an approximate version of the original deri
 
 <br><br>
 
-Check out the `main.ipynb` notebook for further information on selecting the optimum hyper-parameters and adding forcing to the system with periodic control inputs.
+Check out the  [main.ipynb](https://github.com/ches-001/Sparse-Identification-of-Nonlinear-Dynamics/blob/main/main.ipynb) notebook for further information on selecting the optimum hyper-parameters and adding forcing to the system with periodic control inputs.
