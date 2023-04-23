@@ -396,9 +396,10 @@ The `compute_derivatives` function computes the derivatives using finite differe
 The polynomial features are computed as shown in the snippet below:
 
 ```python
-from sindy import compute_poly_features
+from sindy import compute_3d_features
 
 X_poly = compute_poly_features(
+    ode_func=lorenze_ode,
     data=X_U,
     degree=2, 
     column_names=["X", "Y", "Z"]

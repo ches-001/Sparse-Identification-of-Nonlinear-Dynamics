@@ -51,6 +51,51 @@ def lorenz_ode(
     return X_deriv
 
 
+def rossler_ode(
+        t: float, 
+        X: np.ndarray, 
+        a: float, 
+        b: float, 
+        c: float)->np.ndarray:
+    
+    r"""
+    ODE (Ordinary Differential Equation) of the rossler
+    attractor is given as:
+
+    dX/dt = [dx/dt, dy/dt, dz/dt], where:
+
+    dx/dt = -y - z
+    dy/dt = x + ay
+    dz/dt = b + z(x - c)
+
+    Parameters
+    ----------------
+    t: (float)
+        continuous time value for the given state.
+    X: (ndarray):
+        3D state vector
+    a: (float)
+        constant parameter used to compute state of attractor
+    b: (float)
+        constant parameter used to compute state of attractor
+    c: (float)
+        constant parameter used to compute state of attractor
+
+    Return
+    ----------------
+    out: (ndarray)
+        Array of x, y, z derivatives of a given state
+    """
+    
+    x, y, z = X
+    X_deriv = np.zeros_like(X)
+    X_deriv[0] = -y - z
+    X_deriv[1] = x + (a * y)
+    X_deriv[2] = b + (z * (x - c))
+
+    return X_deriv
+
+
 def runge_kutta_ode(
         func: Any, 
         y: np.ndarray, 
@@ -99,23 +144,26 @@ def runge_kutta_ode(
     return t, y
 
 
-def simulate_lorenz_attractor(
+def simulate_3d_attractor(
+        ode_func: Any,
         initial_state: np.ndarray, 
         timesteps: np.ndarray, 
         params: np.ndarray)->Tuple[np.ndarray, np.ndarray]:
     
     r"""
-    Simulates the Lorenz attractor
+    Simulates the Chaotic attractor
 
     Parameters
     ----------------
+    ode_func: (Any)
+        Ordinary Differential Equation of Attractor
     initial_state: (ndarray)
         Initial 3D state value vector of the system
     timesteps: (ndarray)
          array of timesteps where each state in the data occured.
     params: (ndarray)
-        constant parameters used to simulate the lorenz system 
-        (sigma, rho, beta).
+        constant parameters used to simulate the 3d chaotic attractor 
+        (param1, param2, param3).
 
     Return
     ----------------
@@ -134,7 +182,7 @@ def simulate_lorenz_attractor(
             continue
 
         t, y = runge_kutta_ode(
-            func=lorenz_ode, y=y, t=t, dt=dt, params=params)
+            func=ode_func, y=y, t=t, dt=dt, params=params)
         
         states_array.append(y)
         timesteps_array.append(t)
@@ -149,16 +197,15 @@ def compute_derivatives(
         h: int=1)->np.ndarray:
     
     r"""
-    Gradients are computed by discretizing the state values
-    into a grid and computing the absolute finite differece
-    of neighbouring points to compute the derivative
-    and take its absolute values: 
+    Numerically compute the time derivative of the system via finite differece
+    of neighbouring points: 
     |(x_{t+h} - (x_{t}) - (x_{t}) - x_{t-h})| = |(x_{t+h} - x_{t-h})|
+    Parameters
 
     Parameters
     ----------------
     data: (ndarray)
-        states data collected from the simulated lorenz attractor.
+        states data collected from the simulated attractor.
     timesteps: (ndarray)
         array of timesteps where each state in the data occured.
     h: (int)
