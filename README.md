@@ -427,7 +427,8 @@ sindy_coeffs, selected_features = compute_linear_operator(
     max_features=8,
     n_cv=n_cv,
     threshold=threshold,
-    scaler=scaler
+    poly_scaler=poly_scaler,
+    deriv_scaler=deriv_scaler
 )
 
 BETA = sindy_coeffs.T.round(3)
@@ -435,7 +436,7 @@ BETA = sindy_coeffs.T.round(3)
 
 The `compute_linear_operator` function uses the sci-kit-learn's `MultiTaskLassoCV` and the `SelectFromModel` classes to select the relevant polynomial features to compute the relevant coefficients via sci-kit-learn's `LinearRegression` class. You can further decide to introduce sparsity to the optimum linear operator matrix by rounding to the nearest n digits as in the last line of the snippet above, this will round very small numbers up or down to 0 and introduce more sparsity.
 
-**Note:** *Although the `scaler` parameter is not necessary and can be set to `None` in the function above, the linear regression converges faster and better when the dataset is normalised or scaled to within a given range. The scaler parameter if not `None`, is expected to be a scaler class from the sci-kit-learn module, such as `MinMaxScaler` or `StandardScaler`*
+**Note:** *Although the `poly_scaler` and `deriv_scaler` parameters are not necessary and can both be set to `None` in the function above, the linear regression converges faster and better when the dataset is normalised or scaled to within a given range. The scaler parameter if not `None`, is expected to be a scaler class from the sci-kit-learn module, such as `MinMaxScaler` or `StandardScaler`*
 
 
 The `compute_linear_operator` function also returns an array of integers corresponding to indexes of the relevant polynomial columns, we can filter out only the relevant features with this as shown in the snippet below:

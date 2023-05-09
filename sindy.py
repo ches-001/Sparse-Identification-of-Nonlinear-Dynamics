@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import MultiTaskLassoCV, LinearRegression
 from sklearn.feature_selection import SelectFromModel
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from typing import Tuple, Any, Iterable, Dict, Optional
 
 
@@ -289,7 +290,8 @@ def compute_linear_operator(
         max_features: int=8, 
         n_cv: int=5, 
         threshold: float=-np.inf,
-        scaler: Optional[Any]=None
+        poly_scaler: Optional[Any]=None,
+        deriv_scaler: Optional[Any]=None
 
         )->Tuple[np.ndarray, np.ndarray]:
     
@@ -327,8 +329,10 @@ def compute_linear_operator(
         number of cross validations
     threshold: (int)
         feature selection threshold (feature relevance >= threshold)
-    scaler: (Any)
-        Sklearn Scaler class with 'fit_transform(...)' method
+    poly_scaler: (Any)
+        Sklearn Scaler for polynomial features
+    deriv_scaler: (Any)
+        Sklearn Scaler for derivatives
 
     Return
     ----------------
@@ -346,13 +350,11 @@ def compute_linear_operator(
     X = poly_features
     Y = derivatives
 
-    if scaler:
-        X = X[:, 1:]
-        X = scaler.fit_transform(X)
-        Y = scaler.fit_transform(Y)
-
-        ones = np.ones((X.shape[0], 1))
-        X = np.concatenate((ones, X), axis=1)
+    if poly_scaler:
+        X = poly_scaler.transform(X)
+    
+    if deriv_scaler:
+        Y = deriv_scaler.transform(Y)
 
     base_estimator = MultiTaskLassoCV(
         cv=n_cv, 
@@ -380,15 +382,18 @@ def compute_linear_operator(
 
 def optimize_objective(
         trial: Any, 
-        poly_features: np.ndarray,
-        derivatives: np.ndarray,
+        X_train: np.ndarray,
+        y_train: np.ndarray,
+        X_evaluate: np.ndarray,
+        y_evaluate: np.ndarray,
         alpha_space: Tuple[float, float]=(0.1, 0.5),
         max_iter_space: Tuple[int, int]=(1000, 1500),
         max_features_space: Tuple[int, int]=(5, 10), 
         n_cv: int=5, 
         threshold: float=-np.inf,
-        scaler: Optional[Any]=None,
-
+        poly_scaler: Optional[Any]=None,
+        deriv_scaler: Optional[Any]=None,
+        objective_metric: str="l2norm"
         )->float:
     
     r"""
@@ -398,10 +403,14 @@ def optimize_objective(
     ----------------
     trial: (Any)
         current optimization trial state
-    poly_features: (ndarray)
-        Polynomial features for computing coefficients.
-    derivatives: (ndarray)
-        Maximum degree of polynomial features.
+    X_train: (ndarray)
+        Training polynomial features for computing linear operator.
+    y_train: (ndarray)
+        corresponding training derivatives for polynomial features.
+    X_evaluate: (ndarray)
+        Evaluation polynomial features used for hyperparameter tuning.
+    y_evaluate: (ndarray)
+        corresponding evaluation derivatives used for hyperparameter tuning.
     alpha_space: (Tuple[float, float])
         Search range of alpha hyperparameter used for L1 parameter regularisation
     max_iter_space: (Tuple[int, int])
@@ -413,8 +422,13 @@ def optimize_objective(
         number of cross validations
     threshold: (int)
         feature selection threshold (feature relevance >= threshold)
-    scaler: (Any)
-        Sklearn Scaler class with 'fit_transform(...)' method   
+    poly_scaler: (Any)
+        Sklearn Scaler for polynomial features
+    deriv_scaler: (Any)
+        Sklearn Scaler for derivatives
+    objective_metric: (str)
+        Metric of objective to optimize (maximize / minimize), default='l2norm'
+        Options: 'l2norm', 'mse', 'rmse', 'mae', 'r2score'
 
 
     Return
@@ -423,29 +437,44 @@ def optimize_objective(
         Objective to maximize of minimize.
         L2 Norm of difference between estimated derivatives and actual dervatives.
     """
+
+    metric_options = {
+        "l1norm": lambda x, y: np.linalg.norm(x - y),
+        "l2norm": lambda x, y: np.linalg.norm(x - y) ** 2,
+        "mse": lambda x, y: mean_squared_error(x, y),
+        "rmse": lambda x, y: np.sqrt(mean_squared_error(x, y)),
+        "mae": lambda x, y : mean_absolute_error(x, y),
+        "r2score": lambda x, y: r2_score(x, y),
+    }
+
+    assert objective_metric in metric_options.keys(), \
+        f"Invalid objective_metric, expected one of {metric_options.keys()}, but got {objective_metric}"
     
     alpha = trial.suggest_float("alpha", *alpha_space, log=False)
     max_iter = trial.suggest_int("max_iter", *max_iter_space, log=False)
     max_features = trial.suggest_int("max_features", *max_features_space, log=False)
 
     sindy_coeffs, selected_features = compute_linear_operator(
-        poly_features=poly_features,
-        derivatives=derivatives,
+        poly_features=X_train,
+        derivatives=y_train,
         alpha=alpha,
         max_iter=max_iter,
-        scaler=scaler,
+        poly_scaler=poly_scaler,
+        deriv_scaler=deriv_scaler,
         max_features=max_features,
         n_cv=n_cv,
         threshold=threshold
     )
 
-    relevant_features = poly_features[:, selected_features]
-
-    if scaler:
-        relevant_features = scaler.fit_transform(relevant_features)
-        derivatives = scaler.fit_transform(derivatives)
+    if poly_scaler:
+        X_evaluate = poly_scaler.transform(X_evaluate)
     
-    estimates = relevant_features @ sindy_coeffs.T
+    if deriv_scaler:
+        y_evaluate = deriv_scaler.transform(y_evaluate)
 
-    norm2 = np.linalg.norm(estimates - derivatives)**2
-    return norm2
+    X_evaluate = X_evaluate[:, selected_features]
+    
+    y_predicted = X_evaluate @ sindy_coeffs.T
+
+    objective = metric_options[objective_metric](y_predicted, y_evaluate)
+    return objective
