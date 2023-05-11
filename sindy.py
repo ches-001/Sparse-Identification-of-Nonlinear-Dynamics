@@ -169,15 +169,15 @@ def simulate_3d_attractor(
     Return
     ----------------
     out: Tuple[ndarray, ndarray]
-        Tuple of time and corresponding state vectors array
+        Tuple of states and corresponding time vectors array
     """
     dt = timesteps[1] - timesteps[0]
     states_array, timesteps_array = [], []
     y = initial_state
 
 
-    for t in timesteps:
-        if t == 0:
+    for i, t in enumerate(timesteps):
+        if i == 0:
             states_array.append(y)
             timesteps_array.append(0)
             continue
@@ -476,5 +476,5 @@ def optimize_objective(
     
     y_predicted = X_evaluate @ sindy_coeffs.T
 
-    objective = metric_options[objective_metric](y_predicted, y_evaluate)
+    objective = metric_options[objective_metric](y_evaluate, y_predicted)
     return objective
