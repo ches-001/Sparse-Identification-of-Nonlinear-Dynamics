@@ -199,6 +199,7 @@ After computing the sparse linear operator $\beta$, we get the index of the zero
 to Illustrate with a toy example:
 
 let:
+
 $$X =
    \begin{bmatrix}
      x_{00}, &x_{01}, &x_{02}, &x_{03}, &x_{04}\\
