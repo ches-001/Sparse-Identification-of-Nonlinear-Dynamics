@@ -151,7 +151,7 @@ $Y = X \beta$.
 
 This is a linear regression problem, and the matrix $X$ is ought to be a matrix of polynomial features computed from the original $X$ matrix formed by the column vectors $\bar{x}$, $\bar{y}$, $\bar{z}$.
 
-In this implementation, we compute the polynomial features of the $X$ matrix from 0 order up to the nth order ($2 \leq n \leq \infty$), to get columns vectors such as: column of 1s, $\bar{x}$, $\bar{y}$, $\bar{z}$, $\bar{x}^2$, $\bar{x} \bar{y}$, $\bar{x} \bar{z}$, $\bar{y} \bar{z}$, $\bar{y}^2$, $\bar{z}^2$, ....$\bar{z}^5$
+In this implementation, we compute the polynomial features of the $X$ matrix from 0 order up to the nth order ($2 \leq n \leq \infty$), to get columns vectors such as: column of 1s, $\bar{x}$, $\bar{y}$, $\bar{z}$, $\bar{x}^2$, $\bar{x} \bar{y}$, $\bar{x} \bar{z}$, $\bar{y} \bar{z}$, $\bar{y}^2$, $\bar{z}^2$, .... $\bar{z}^5$
 
 after computing the polynomial features, the matrix $X$ is overwritten to becomes: 
 
